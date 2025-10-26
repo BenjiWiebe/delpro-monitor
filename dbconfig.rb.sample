@@ -1,0 +1,6 @@
+DBCONFIG = {
+  username: 'sa',
+  password: 'examplepassword',
+  host: 'dbserver.mydomain.com',
+  database: 'DDM'
+}

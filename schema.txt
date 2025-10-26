@@ -1,0 +1,2 @@
+CREATE TABLE recent (number int primary key, activityid text, transponderid text);
+CREATE TABLE events (id integer primary key, number int not null, oldactivityid text, newactivityid text, oldtransponderid text, newtransponderid text, timestamp text not null);
