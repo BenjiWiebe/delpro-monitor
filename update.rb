@@ -35,8 +35,9 @@ db.execute('SELECT number,activityid,transponderid from recent') do |row|
   if rec[:act].to_s == row[1].to_s and rec[:tran].to_s == row[2].to_s
     records.delete row[0] # no change in data, delete it from the changeset, no need to insert anything to the database
   else
-    rec[:oldact] = row[1] # add the old data, and it'll carry over the new data cause it's already in the hash
-    rec[:oldtran] = row[2]
+    # add the old data (only the changed fields), and it'll carry over the new data cause it's already in the hash
+    rec[:oldact] = row[1] if rec[:oldact] != row[1]
+    rec[:oldtran] = row[2] if rec[:oldtran] != row[2]
   end
 end
 
