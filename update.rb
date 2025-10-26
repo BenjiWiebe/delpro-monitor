@@ -1,7 +1,6 @@
 #!/usr/bin/ruby
 require 'tiny_tds'
 require 'sqlite3'
-require 'pry'
 
 require_relative 'dbconfig.rb'
 
