@@ -30,7 +30,9 @@ db.execute('SELECT number,activityid,transponderid from recent') do |row|
     records[row[0]] = rec = {}
   end
   
-  if rec[:act] == row[1] and rec[:tran] == row[2]
+  # N.B. TinyTDS getting data from MS SQL gets the activity and transponder IDs as numbers. SQLite can't store numbers that big except as strings,
+  # hence the conversion to strings for comparison's sake.  Also, since one side or the other might be nil (which converts to "") we need to to_s both of them.
+  if rec[:act].to_s == row[1].to_s and rec[:tran].to_s == row[2].to_s
     records.delete row[0] # no change in data, delete it from the changeset, no need to insert anything to the database
   else
     rec[:oldact] = row[1] # add the old data, and it'll carry over the new data cause it's already in the hash
@@ -39,15 +41,23 @@ db.execute('SELECT number,activityid,transponderid from recent') do |row|
 end
 
 ts = Time.now.iso8601
-stmt = db.prepare('INSERT INTO events (number,oldactivityid,newactivityid,oldtransponderid,newtransponderid,timestamp) values (:number,:oldact,:act,:oldtran,:tran,:ts)')
+evtstmt = db.prepare('INSERT INTO events (number,oldactivityid,newactivityid,oldtransponderid,newtransponderid,timestamp) values (:number,:oldact,:act,:oldtran,:tran,:ts)')
+updstmt = db.prepare('REPLACE INTO recent (number,activityid,transponderid) values (:number,:act,:tran)')
 db.transaction do
   records.each do |number,data|
     data[:ts] = ts
     data[:number] = number
-    stmt.execute data
+    evtstmt.execute data
+
+    # annoyingly, sqlite3 gem doesn't like it if we have unused params in the hash...
+    data.delete :oldact
+    data.delete :oldtran
+    data.delete :ts
+    updstmt.execute data
   end
 end
-stmt.close
+updstmt.close
+evtstmt.close
 db.close
 
 puts "#{records.count} changes recorded."
