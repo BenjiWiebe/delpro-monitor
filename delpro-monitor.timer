@@ -1,0 +1,9 @@
+[Unit]
+Description=Monitor DelPro database
+
+[Timer]
+OnBootSec=10min
+OnUnitActiveSec=1hour
+
+[Install]
+WantedBy=timers.target

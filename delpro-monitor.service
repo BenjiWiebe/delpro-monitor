@@ -1,0 +1,9 @@
+[Unit]
+Description=Monitor DelPro database
+
+[Service]
+Type=oneshot
+User=nobody
+Group=nobody
+WorkingDirectory=/path/to/
+ExecStart=/path/to/update.rb
