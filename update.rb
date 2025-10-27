@@ -2,7 +2,7 @@
 require 'tiny_tds'
 require 'sqlite3'
 
-require_relative 'dbconfig.rb'
+require_relative 'config.rb'
 
 def get_live_data
   client = TinyTds::Client.new(DBCONFIG)
@@ -61,3 +61,9 @@ evtstmt.close
 db.close
 
 puts "#{records.count} changes recorded."
+if records.count > 1
+  require 'net/http'
+  d = "Activity/transponder changed for #{records.each_key.to_a.join(',')}"
+  u = URI(get_ntfy_url(URI.encode_uri_component(d))
+  Net::HTTP.get(uri)
+end

@@ -4,3 +4,6 @@ DBCONFIG = {
   host: 'dbserver.mydomain.com',
   database: 'DDM'
 }
+def get_ntfy_url(message)
+  return 'https://ntfy.sh/my_channel/send?message=' + message
+end
