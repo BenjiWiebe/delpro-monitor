@@ -64,6 +64,6 @@ puts "#{records.count} changes recorded."
 if records.count > 1
   require 'net/http'
   d = "Activity/transponder changed for #{records.each_key.to_a.join(',')}"
-  u = URI(get_ntfy_url(URI.encode_uri_component(d))
-  Net::HTTP.get(uri)
+  u = URI(get_ntfy_url(URI.encode_uri_component(d)))
+  Net::HTTP.get(u)
 end
